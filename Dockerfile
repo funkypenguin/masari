@@ -3,6 +3,9 @@
 # builder stage
 FROM ubuntu:16.04 as builder
 
+ARG BRANCH=v0.2.4.1
+ENV BRANCH=${BRANCH}
+
 RUN apt-get update && \
     apt-get --no-install-recommends --yes install \
         ca-certificates \
@@ -86,8 +89,8 @@ RUN git clone https://github.com/jedisct1/libsodium.git -b ${SODIUM_VERSION} \
     && make check \
     && make install
 
+RUN git clone -b $BRANCH --recursive git@github.com:masari-project/masari.git /src
 WORKDIR /src
-COPY . .
 
 ARG NPROC
 RUN rm -rf build && \
