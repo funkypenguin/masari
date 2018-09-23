@@ -9,7 +9,7 @@
 
 # Contents
 
-1. [What is funkypenguin/masari?](##what-is-funkypenguinmasari)
+1. [What is funkypenguin/masari?](#what-is-funkypenguin-masari)
 2. [Why should I use this?](#why-should-i-use-this)
 3. [How do I use it?](#how-do-i-use-this)
 4. [CHANGELOG](#changelog)
