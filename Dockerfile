@@ -3,7 +3,7 @@
 # builder stage
 FROM ubuntu:16.04 as builder
 
-ARG BRANCH=v0.2.4.1
+ARG BRANCH=v0.3.0.0
 ENV BRANCH=${BRANCH}
 
 RUN apt-get update && \
