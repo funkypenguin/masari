@@ -1,7 +1,7 @@
 # Multistage docker build, requires docker 17.05
 
 # builder stage
-FROM ubuntu:18.04 as builder
+FROM ubuntu:16.04 as builder
 
 # Allows us to auto-discover the latest release from the repo
 ARG REPO=masari-project/masari
@@ -126,7 +126,7 @@ RUN rm -rf build && \
     if [ -z "$NPROC" ];then make -j$(nproc) release-static;else make -j$NPROC release-static;fi
 
 # runtime stage
-FROM ubuntu:18.04
+FROM ubuntu:16.04
 
 # Now we DO need these, for the auto-labeling of the image
 ARG BUILD_DATE
