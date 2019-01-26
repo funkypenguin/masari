@@ -1,15 +1,17 @@
 # Multistage docker build, requires docker 17.05
 
 # builder stage
-FROM ubuntu:16.04 as builder
+FROM ubuntu:18.04 as builder
 
-ARG BRANCH=v0.3.0.0
-ENV BRANCH=${BRANCH}
+# Allows us to auto-discover the latest release from the repo
+ARG REPO=masari-project/masari
+ENV REPO=${REPO}
 
 RUN apt-get update && \
     apt-get --no-install-recommends --yes install \
         ca-certificates \
         cmake \
+        curl \
         g++ \
         make \
         pkg-config \
@@ -89,7 +91,8 @@ RUN git clone https://github.com/jedisct1/libsodium.git -b ${SODIUM_VERSION} \
     && make check \
     && make install
 
-RUN git clone -b $BRANCH --recursive git@github.com:masari-project/masari.git /src
+RUN TAG=$(curl -L --silent "https://api.github.com/repos/$REPO/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")') && \
+    git clone -b $TAG --single-branch https://github.com/$REPO.git /src
 WORKDIR /src
 
 ARG NPROC
@@ -97,7 +100,7 @@ RUN rm -rf build && \
     if [ -z "$NPROC" ];then make -j$(nproc) release-static;else make -j$NPROC release-static;fi
 
 # runtime stage
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Now we DO need these, for the auto-labeling of the image
 ARG BUILD_DATE
