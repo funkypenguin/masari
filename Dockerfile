@@ -120,10 +120,14 @@ RUN TAG=$(curl -L --silent "https://api.github.com/repos/$REPO/releases/latest" 
 WORKDIR /src
 
 ENV USE_SINGLE_BUILDDIR=1
-
 ARG NPROC
-RUN rm -rf build && \
-    if [ -z "$NPROC" ];then make -j$(nproc) release-static;else make -j$NPROC release-static;fi
+RUN set -ex && \
+    git submodule init && git submodule update && \
+    rm -rf build && \
+    if [ -z "$NPROC" ] ; \
+    then make -j$(nproc) release-static ; \
+    else make -j$NPROC release-static ; \
+    fi
 
 # runtime stage
 FROM ubuntu:16.04
